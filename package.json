@@ -1,0 +1,47 @@
+{
+  "name": "monorepo-ez-scripts",
+  "version": "1.0.0",
+  "description": "cli tool for running monorepo scripts",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zubetcha/monorepo-ez-scripts.git"
+  },
+  "keywords": [
+    "monorepo"
+  ],
+  "author": "zubetcha",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/zubetcha/monorepo-ez-scripts/issues"
+  },
+  "homepage": "https://github.com/zubetcha/monorepo-ez-scripts#readme",
+  "dependencies": {
+    "chalk": "^5.2.0",
+    "commander": "^11.0.0",
+    "conf": "^11.0.1",
+    "prompts": "^2.4.2",
+    "update-notifier": "^6.0.2",
+    "validate-npm-package-name": "^5.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.3.2",
+    "@types/prompts": "^2.4.4",
+    "@types/validate-npm-package-name": "^4.0.0",
+    "eslint": "^8.43.0",
+    "eslint-config-prettier": "^8.8.0",
+    "eslint-config-raine": "^0.4.0",
+    "eslint-config-standard": "^17.1.0",
+    "eslint-plugin-fp": "^2.3.0",
+    "eslint-plugin-import": "^2.27.5",
+    "eslint-plugin-jsdoc": "^46.3.0",
+    "eslint-plugin-n": "^16.0.1",
+    "eslint-plugin-promise": "^6.1.1",
+    "husky": "^8.0.3",
+    "lint-staged": "^13.2.2",
+    "prettier": "^2.8.8"
+  }
+}
