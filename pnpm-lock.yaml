@@ -20,6 +20,7 @@ specifiers:
   lint-staged: ^13.2.2
   prettier: ^2.8.8
   prompts: ^2.4.2
+  typescript: ^5.1.5
   update-notifier: ^6.0.2
   validate-npm-package-name: ^5.0.0
 
@@ -47,6 +48,7 @@ devDependencies:
   husky: 8.0.3
   lint-staged: 13.2.2
   prettier: 2.8.8
+  typescript: 5.1.5
 
 packages:
 
@@ -2271,6 +2273,12 @@ packages:
     dependencies:
       is-typedarray: 1.0.0
     dev: false
+
+  /typescript/5.1.5:
+    resolution: {integrity: sha512-FOH+WN/DQjUvN6WgW+c4Ml3yi0PH+a/8q+kNIfRehv1wLhWONedw85iu+vQ39Wp49IzTJEsZ2lyLXpBF7mkF1g==}
+    engines: {node: '>=14.17'}
+    hasBin: true
+    dev: true
 
   /unbox-primitive/1.0.2:
     resolution: {integrity: sha512-61pPlCD9h51VoreyJ0BReideM3MDKMKnh6+V9L08331ipq6Q8OFXZYiqP6n/tbHx4s5I9uRhcye6BrbkizkBDw==}

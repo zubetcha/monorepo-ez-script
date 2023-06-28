@@ -1,24 +1,37 @@
 {
   "name": "monorepo-ez-scripts",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "cli tool for running monorepo scripts",
-  "main": "index.js",
+  "main": "dist/src/index.js",
   "scripts": {
-    "test": "test"
+    "build": "npm run build:ts",
+    "build:ts": "rm -rf dist && tsc",
+    "lint": "eslint --ext .tsx --ext .ts src/",
+    "format": "prettier --check ./src",
+    "prepare": "npm run build",
+    "mes": "node dist/src/index.js"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/zubetcha/monorepo-ez-scripts.git"
   },
   "keywords": [
-    "monorepo"
+    "monorepo",
+    "cli",
+    "scripts"
   ],
-  "author": "zubetcha",
+  "author": "zubetcha <zuhye5@gmail.com>",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/zubetcha/monorepo-ez-scripts/issues"
   },
   "homepage": "https://github.com/zubetcha/monorepo-ez-scripts#readme",
+  "bin": {
+    "mes": "dist/src/index.js"
+  },
+  "files": [
+    "dist"
+  ],
   "dependencies": {
     "chalk": "^5.2.0",
     "commander": "^11.0.0",
@@ -42,6 +55,7 @@
     "eslint-plugin-promise": "^6.1.1",
     "husky": "^8.0.3",
     "lint-staged": "^13.2.2",
-    "prettier": "^2.8.8"
+    "prettier": "^2.8.8",
+    "typescript": "^5.1.5"
   }
 }

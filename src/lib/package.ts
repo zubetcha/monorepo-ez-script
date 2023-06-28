@@ -1,8 +1,7 @@
 import validate from 'validate-npm-package-name';
+import type { PackageManager } from '../types/package';
 
-type PackageManager = 'npm' | 'pnpm' | 'yarn';
-
-export const getPackageManager = (): PackageManager => {
+export function getPackageManager(): PackageManager {
   const npmConfig = process.env.npm_config_user_agent || process.env.npm_execpath || '';
 
   switch (true) {
@@ -10,17 +9,17 @@ export const getPackageManager = (): PackageManager => {
       return 'yarn';
     case npmConfig.includes('pnpm'):
       return 'pnpm';
+    case npmConfig.includes('deno'):
+      return 'deno';
     default:
       return 'npm';
   }
-};
+}
 
-export const validatePackageName = (
-  name: string,
-): {
+export function validatePackageName(name: string): {
   valid: boolean;
   problems?: string[];
-} => {
+} {
   const nameValidation = validate(name);
 
   if (nameValidation.validForNewPackages) {
@@ -31,4 +30,4 @@ export const validatePackageName = (
     valid: false,
     problems: [...(nameValidation.errors || []), ...(nameValidation.warnings || [])],
   };
-};
+}

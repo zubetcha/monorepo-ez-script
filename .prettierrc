@@ -3,7 +3,7 @@
   "importOrder": ["^\\.\\./", "^\\./"],
   "importOrderSortSpecifiers": true,
   "overrides": [{ "files": "*.ts", "options": { "parser": "typescript" } }],
-  "printWidth": 120,
+  "printWidth": 100,
   "semi": true,
   "singleQuote": true,
   "tabWidth": 2,
