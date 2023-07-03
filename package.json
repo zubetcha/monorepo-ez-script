@@ -4,12 +4,13 @@
   "description": "cli tool for running monorepo scripts",
   "main": "dist/src/index.js",
   "scripts": {
-    "build": "npm run build:ts",
+    "build": "npm run build:ts && chmod -R 755 dist",
     "build:ts": "rm -rf dist && tsc",
     "lint": "eslint --ext .tsx --ext .ts src/",
     "format": "prettier --check ./src",
     "prepare": "npm run build",
-    "mes": "node dist/src/index.js"
+    "mes": "node dist/src/index.js",
+    "test": "rm -rf dist && npm run build && npm link && mes zubetcha"
   },
   "repository": {
     "type": "git",
@@ -33,9 +34,11 @@
     "dist"
   ],
   "dependencies": {
-    "chalk": "^5.2.0",
+    "chalk": "^4.1.2",
     "commander": "^11.0.0",
     "conf": "^11.0.1",
+    "detect-package-manager": "^2.0.1",
+    "execa": "^5.1.1",
     "prompts": "^2.4.2",
     "update-notifier": "^6.0.2",
     "validate-npm-package-name": "^5.0.0"
@@ -43,6 +46,7 @@
   "devDependencies": {
     "@types/node": "^20.3.2",
     "@types/prompts": "^2.4.4",
+    "@types/update-notifier": "^6.0.4",
     "@types/validate-npm-package-name": "^4.0.0",
     "eslint": "^8.43.0",
     "eslint-config-prettier": "^8.8.0",
