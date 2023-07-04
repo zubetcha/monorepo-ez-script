@@ -1,16 +1,16 @@
 {
   "name": "monorepo-ez-scripts",
   "version": "0.0.1",
-  "description": "cli tool for running monorepo scripts",
+  "description": "CLI for running scripts easily in monorepo",
   "main": "dist/src/index.js",
   "scripts": {
     "build": "npm run build:ts && chmod -R 755 dist",
     "build:ts": "rm -rf dist && tsc",
     "lint": "eslint --ext .tsx --ext .ts src/",
     "format": "prettier --check ./src",
-    "prepare": "npm run build",
+    "prepare": "rm -rf dist && npm run build",
     "mes": "node dist/src/index.js",
-    "test": "rm -rf dist && npm run build && npm link && mes zubetcha"
+    "local": "pnpm run prepare && npm link"
   },
   "repository": {
     "type": "git",
@@ -28,10 +28,14 @@
   },
   "homepage": "https://github.com/zubetcha/monorepo-ez-scripts#readme",
   "bin": {
-    "mes": "dist/src/index.js"
+    "mes": "dist/src/bin/cli.js"
   },
   "files": [
     "dist"
+  ],
+  "workspaces": [
+    "packages/*",
+    "apps/*"
   ],
   "dependencies": {
     "chalk": "^4.1.2",
