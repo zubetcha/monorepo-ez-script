@@ -5,10 +5,12 @@ import chalk from 'chalk';
 import { detect } from 'detect-package-manager';
 import path from 'path';
 import fs from 'fs';
+import YAML from 'yaml';
 
 import type { Command } from 'commander';
 
 import { getPackageManager } from './lib/package';
+import { getWorkspaces } from './lib/workspace';
 import packageJson from '../package.json';
 
 let packageManager = '';
@@ -61,7 +63,6 @@ const notifyUpdate = async () => {
 /**
  * command action: init
  */
-
 export const init = async (_: unknown, command: Command) => {
   await notifyUpdate();
 
@@ -78,7 +79,7 @@ export const init = async (_: unknown, command: Command) => {
   }
 
   // 현재 위치가 root인지 확인 및 예외처리
-  // 루트에 git이 있는지 확인
+  // cwd에 git이 있는지 확인
   if (!fs.existsSync('.git')) {
     console.error(`Please run CLI at root directory`);
     process.exit(1);
@@ -91,18 +92,14 @@ export const init = async (_: unknown, command: Command) => {
   }
 
   // package.json에 workspaces 필드가 있는지 확인 및 예외처리
-  const pkgJSON = JSON.parse(fs.readFileSync('package.json', 'utf-8'));
-  const lernaJSON = fs.existsSync('lerna.json')
-    ? JSON.parse(fs.readFileSync('lerna.json', 'utf-8'))
-    : {};
-  const workspaces = pkgJSON['workspaces'] || lernaJSON['packages'] || undefined;
-
+  const workspaces = getWorkspaces();
   if (!workspaces) {
     console.error(`Please...`);
     process.exit(1);
   }
 
   // workspace 이름 및 각 workspace package.json의 scripts 정보 수집
+  // glob 패턴...
 
   // config 파일 생성
   const info = {
