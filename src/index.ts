@@ -2,7 +2,6 @@
 
 import Commander from 'commander';
 import chalk from 'chalk';
-import { detect } from 'detect-package-manager';
 import path from 'path';
 import fs from 'fs';
 
@@ -10,6 +9,7 @@ import type { Command } from 'commander';
 
 import { getPackageManager } from './lib/package';
 import { getWorkspaces } from './lib/workspace';
+import { getConfiguration } from './lib/configuration';
 import { hasPath } from './lib/common';
 import packageJson from '../package.json';
 
@@ -78,7 +78,7 @@ export const init = async (_: unknown, command: Command) => {
     process.exit(1);
   }
 
-  // package.json에 workspaces 필드가 있는지 확인 및 예외처리
+  // 레포지토리에 workspace 정보가 있는지 확인 및 예외처리
   const workspaces = getWorkspaces();
   if (!workspaces) {
     console.error(`Please...`);
@@ -89,13 +89,16 @@ export const init = async (_: unknown, command: Command) => {
   // glob 패턴...
 
   // config 파일 생성
-  const info = {
-    workspaces,
-    pmClient: 'npm',
-    scripts: {},
-  };
+  const configuration = getConfiguration(packageManager, workspaces);
+  // const info = {
+  //   packageManager: 'npm',
+  //   workspaces,
+  //   scripts: {},
+  // };
 
-  fs.writeFileSync('mes.json', JSON.stringify(info));
+  console.log(configuration);
+
+  fs.writeFileSync('mes.json', JSON.stringify(configuration));
 };
 
 /**

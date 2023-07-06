@@ -1,7 +1,5 @@
 import validate from 'validate-npm-package-name';
 import { hasPath } from './common';
-import { detect } from 'detect-package-manager';
-import execa from 'execa';
 
 import type { PackageManager } from '../types/package';
 
