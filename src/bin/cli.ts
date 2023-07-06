@@ -13,8 +13,8 @@ program.name(packageJson.name).description(packageJson.description).version(pack
 program.command('init').description('Create configuration file in root directory').action(init);
 
 program
-  .command('script')
-  .description('Select child package and run script')
+  .command('run')
+  .description('Select workspace and run script')
   .action(() => console.log(process.argv));
 
 program.parse(process.argv);

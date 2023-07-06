@@ -1,7 +1,8 @@
 import validate from 'validate-npm-package-name';
-import { promises as fs } from 'fs';
-import { resolve } from 'path';
+import { hasPath } from './common';
+import { detect } from 'detect-package-manager';
 import execa from 'execa';
+
 import type { PackageManager } from '../types/package';
 
 export function validatePackageName(name: string): {
@@ -20,17 +21,23 @@ export function validatePackageName(name: string): {
   };
 }
 
-export function getPackageManager(): PackageManager {
-  const npmConfig = process.env.npm_config_user_agent || process.env.npm_execpath || '';
+export const getPackageManager = (cwd: string = '.'): PackageManager => {
+  const npmConfig = process.env.npm_config_user_agent || process.env.npm_execpath;
 
-  switch (true) {
-    case npmConfig.includes('yarn'):
-      return 'yarn';
-    case npmConfig.includes('pnpm'):
-      return 'pnpm';
-    case npmConfig.includes('deno'):
-      return 'deno';
-    default:
-      return 'npm';
+  const isPnpm = npmConfig ? npmConfig.includes('pnpm') : hasPath(cwd, 'pnpm-lock.yaml');
+  const isDeno = npmConfig ? npmConfig.includes('deno') : hasPath(cwd, 'deno.json');
+  const isYarn = npmConfig ? npmConfig.includes('yarn') : hasPath(cwd, 'yarn.lock');
+  const isNpm = hasPath(cwd, 'package-lock.json');
+
+  if (isPnpm) {
+    return 'pnpm';
+  } else if (isDeno) {
+    return 'deno';
+  } else if (isYarn) {
+    return 'deno';
+  } else if (isNpm) {
+    return 'npm';
+  } else {
+    return 'npm';
   }
-}
+};

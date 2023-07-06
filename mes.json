@@ -1,1 +1,1 @@
-{ "workspaces": ["packages/*", "apps/*"] }
+{ "workspaces": ["packages/*", "components/**", "!**/test/**"], "pmClient": "npm", "scripts": {} }
