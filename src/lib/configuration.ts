@@ -1,11 +1,15 @@
-import { glob, sync, globSync } from 'glob';
+import { globSync } from 'glob';
 import fs from 'fs';
 
 import type { PackageManager } from '../types/package';
 
-// pnpm/yarn은 workspace의 package.json['name']
-// npm은 yarn 또는 디렉토리 이름
-
+/**
+ * Get Configuration Information like package manager, workspace name, scripts.
+ *
+ * @param packageManager Package manager
+ * @param workspaces
+ * @returns
+ */
 export const getConfiguration = (packageManager: PackageManager, workspaces: string[]) => {
   let workspacePatterns: string[] = workspaces
     .filter(workspace => !workspace.startsWith('!'))
@@ -20,32 +24,28 @@ export const getConfiguration = (packageManager: PackageManager, workspaces: str
     .filter(workspace => workspace.startsWith('!'))
     .map(workspace => workspace.slice(1));
 
-  const workspaceNames: string[] = [];
+  const workpaceNames = new Set();
   const scripts: Record<string, string[]> = {};
 
-  if (packageManager === 'npm') {
-  } else {
-    const packageJsonsPath = globSync(workspacePatterns, {
-      ignore: ignores,
-    });
+  const packageJsonPaths = globSync(workspacePatterns, {
+    ignore: ignores,
+    withFileTypes: true,
+  });
 
-    console.log(packageJsonsPath);
+  packageJsonPaths.forEach(path => {
+    const packageJsonFile = fs.readFileSync(path.relative(), { encoding: 'utf-8' });
+    const packageJson = JSON.parse(packageJsonFile);
+    const packageName = packageManager === 'npm' ? path.parent?.name : packageJson.name;
 
-    packageJsonsPath.forEach(path => {
-      const packageJsonFile = fs.readFileSync(path, { encoding: 'utf-8' });
-      const packageJson = JSON.parse(packageJsonFile);
-      const packageName = packageJson.name;
-
-      console.log(packageJson);
-
-      workspaceNames.push(packageName);
+    if (packageName) {
+      workpaceNames.add(packageName);
       scripts[packageName] = Object.keys(packageJson.scripts);
-    });
-  }
+    }
+  });
 
   return {
     packageManager,
-    workspaceNames,
+    workspaceNames: [...workpaceNames],
     scripts,
   };
 };

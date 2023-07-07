@@ -21,14 +21,11 @@ const { common, pnpm, lerna } = CONFIGURATION;
 export const getWorkspaces = () => {
   const pkg = fs.readFileSync(common.file, 'utf-8');
   const lernaConf = fs.existsSync(lerna.file) ? fs.readFileSync(lerna.file, 'utf-8') : '{}';
-  const pnpmWorkspaceConf = fs.existsSync(pnpm.file) ? fs.readFileSync(pnpm.file, 'utf-8') : '';
+  const pnpmWorkspaceConf = fs.existsSync(pnpm.file) ? fs.readFileSync(pnpm.file, 'utf-8') : '{}';
 
   const pkgJSON = JSON.parse(pkg);
   const lernaJSON = JSON.parse(lernaConf);
   const pnpmWorkspaceJSON = YAML.parse(pnpmWorkspaceConf);
 
-  const workspaces =
-    pkgJSON[common.field] || lernaJSON[lerna.field] || pnpmWorkspaceJSON[pnpm.field];
-
-  return workspaces;
+  return pkgJSON[common.field] || lernaJSON[lerna.field] || pnpmWorkspaceJSON[pnpm.field];
 };

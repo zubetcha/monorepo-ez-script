@@ -14,7 +14,7 @@ import { hasPath } from './lib/common';
 import packageJson from '../package.json';
 
 /**
- * 현재 버전이 최신 버전이 아닌 경우
+ * Notify if the current version is out of date.
  */
 const notifyUpdate = async () => {
   const { default: updateNotifier } = await import('update-notifier');
@@ -46,11 +46,9 @@ const notifyUpdate = async () => {
 export const init = async (_: unknown, command: Command) => {
   console.log(`mes ${chalk.green(command.name())}`);
 
-  // 버전 update 노티
   await notifyUpdate();
 
-  // 패키지매니저 확인
-  // deno 미지원 예외처리
+  // Check which package manager.
   const packageManager = getPackageManager();
   if (packageManager === 'deno') {
     console.error(``);
@@ -59,45 +57,33 @@ export const init = async (_: unknown, command: Command) => {
 
   const cwd = path.resolve(process.cwd());
 
-  // cwd 밖에서 실행되고 있지는 않은지 확인 및 예외처리
+  // Check if CLI is running inside current working directory.
   if (!cwd.startsWith(process.cwd())) {
     console.error(``);
     process.exit(1);
   }
 
-  // 현재 위치가 root인지 확인 및 예외처리
-  // cwd에 git이 있는지 확인
+  // Check if the current working directory is the root directory.
   if (!hasPath(cwd, '.git')) {
     console.error(`Please run CLI in root directory`);
     process.exit(1);
   }
 
-  // 현재 위치에 package.json이 있는지 확인 및 예외처리
+  // Check if package.json exists in current working directory.
   if (!hasPath(cwd, 'package.json')) {
     console.error(`Please ensure that package.json exists in root directory`);
     process.exit(1);
   }
 
-  // 레포지토리에 workspace 정보가 있는지 확인 및 예외처리
+  // Check if the monorepo workspace information exists
   const workspaces = getWorkspaces();
   if (!workspaces) {
     console.error(`Please...`);
     process.exit(1);
   }
 
-  // workspace 이름 및 각 workspace package.json의 scripts 정보 수집
-  // glob 패턴...
-
-  // config 파일 생성
+  // Create configuration file in root directory.
   const configuration = getConfiguration(packageManager, workspaces);
-  // const info = {
-  //   packageManager: 'npm',
-  //   workspaces,
-  //   scripts: {},
-  // };
-
-  console.log(configuration);
-
   fs.writeFileSync('mes.json', JSON.stringify(configuration));
 };
 

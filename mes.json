@@ -1,1 +1,1 @@
-{"packageManager":"pnpm","workspaceNames":["monorepo-ez-scripts","monorepo-ez-scripts"],"scripts":{"monorepo-ez-scripts":["build","build:ts","lint","format","prepare","mes","local"]}}
+{"packageManager":"pnpm","workspaceNames":["monorepo-ez-scripts"],"scripts":{"monorepo-ez-scripts":["build","build:ts","lint","format","prepare","mes","local"]}}

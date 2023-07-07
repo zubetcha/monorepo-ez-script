@@ -8,8 +8,7 @@
     "build:ts": "rm -rf dist && tsc",
     "lint": "eslint --ext .tsx --ext .ts src/",
     "format": "prettier --check ./src",
-    "prepare": "rm -rf dist && npm run build",
-    "mes": "node dist/src/index.js",
+    "prepare": "npm run build",
     "local": "pnpm run prepare && npm link"
   },
   "repository": {
@@ -19,7 +18,8 @@
   "keywords": [
     "monorepo",
     "cli",
-    "scripts"
+    "scripts",
+    "task"
   ],
   "author": "zubetcha <zuhye5@gmail.com>",
   "license": "ISC",
@@ -31,7 +31,8 @@
     "mes": "dist/src/bin/cli.js"
   },
   "files": [
-    "dist"
+    "dist",
+    "!**/test/**"
   ],
   "dependencies": {
     "chalk": "^4.1.2",
