@@ -4,7 +4,7 @@ import { Command } from 'commander';
 import chalk from 'chalk';
 
 import packageJson from '../../package.json';
-import { init } from '../index';
+import { init, run } from '../index';
 
 const program = new Command();
 
@@ -12,9 +12,6 @@ program.name(packageJson.name).description(packageJson.description).version(pack
 
 program.command('init').description('Create configuration file in root directory').action(init);
 
-program
-  .command('run')
-  .description('Select workspace and run script')
-  .action(() => console.log(process.argv));
+program.command('run').description('Select workspace and run script').action(run);
 
 program.parse(process.argv);

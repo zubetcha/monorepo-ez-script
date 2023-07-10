@@ -1,25 +1,10 @@
-import validate from 'validate-npm-package-name';
 import { hasPath } from './common';
 
 import type { PackageManager } from '../types/package';
 
-export function validatePackageName(name: string): {
-  valid: boolean;
-  problems?: string[];
-} {
-  const nameValidation = validate(name);
+const validPackageManagers = ['npm', 'pnpm', 'yarn'];
 
-  if (nameValidation.validForNewPackages) {
-    return { valid: true };
-  }
-
-  return {
-    valid: false,
-    problems: [...(nameValidation.errors || []), ...(nameValidation.warnings || [])],
-  };
-}
-
-export const getPackageManager = (cwd: string = '.'): PackageManager => {
+const getPackageManager = (cwd: string = '.'): PackageManager => {
   const npmConfig = process.env.npm_config_user_agent || process.env.npm_execpath;
 
   const isPnpm = npmConfig ? npmConfig.includes('pnpm') : hasPath(cwd, 'pnpm-lock.yaml');
@@ -39,3 +24,9 @@ export const getPackageManager = (cwd: string = '.'): PackageManager => {
     return 'npm';
   }
 };
+
+const isValidPackageManager = (packageManager: string) => {
+  return validPackageManagers.includes(packageManager);
+};
+
+export { validPackageManagers, getPackageManager, isValidPackageManager };

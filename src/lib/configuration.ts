@@ -2,6 +2,7 @@ import { globSync } from 'glob';
 import fs from 'fs';
 
 import type { PackageManager } from '../types/package';
+import type { Configuration } from '../types/configuration';
 
 /**
  * Get Configuration Information like package manager, workspace name, scripts.
@@ -10,7 +11,10 @@ import type { PackageManager } from '../types/package';
  * @param workspaces
  * @returns
  */
-export const getConfiguration = (packageManager: PackageManager, workspaces: string[]) => {
+export const getConfiguration = (
+  packageManager: PackageManager,
+  workspaces: string[],
+): Configuration => {
   let workspacePatterns: string[] = workspaces
     .filter(workspace => !workspace.startsWith('!'))
     .map(workspace => {
@@ -24,7 +28,7 @@ export const getConfiguration = (packageManager: PackageManager, workspaces: str
     .filter(workspace => workspace.startsWith('!'))
     .map(workspace => workspace.slice(1));
 
-  const workpaceNames = new Set();
+  const workpaceNames: Set<string> = new Set();
   const scripts: Record<string, string[]> = {};
 
   const packageJsonPaths = globSync(workspacePatterns, {
@@ -45,7 +49,7 @@ export const getConfiguration = (packageManager: PackageManager, workspaces: str
 
   return {
     packageManager,
-    workspaceNames: [...workpaceNames],
+    workspaces: [...workpaceNames],
     scripts,
   };
 };
