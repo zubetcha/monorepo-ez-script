@@ -19,9 +19,7 @@ npm run <SCRIPT> --workspace=<WORKSPACE>
 pnpm --filter "<WORKSPACE>" <SCRIPT>
 ```
 
-I know we can also add an abbreviated script to root package.json.  
-But what if workspaces keep adding? What if there are too many scripts?  
-Wouldn't it be nice if you don't have to remember the name of the workspace or the type of script?
+I know we can also add an abbreviated script to root package.json. But, it would be quite cumbersome to add each time the number of workspaces and scripts increases. This project contains a command (i.e. `mes run`) that allows you to simply select a workspace and a script to run.
 
 <br/>
 
