@@ -8,7 +8,7 @@
     "lint": "eslint --ext .tsx --ext .ts src/",
     "format": "prettier --check ./src",
     "prepare": "pnpm build",
-    "dev": "pnpm build && pnpm link --global"
+    "dev": "pnpm build && npm link"
   },
   "repository": {
     "type": "git",
