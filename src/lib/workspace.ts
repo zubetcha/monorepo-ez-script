@@ -18,7 +18,7 @@ const CONFIGURATION = {
 
 const { common, pnpm, lerna } = CONFIGURATION;
 
-export const getWorkspaces = () => {
+const getWorkspaces = () => {
   const pkg = fs.readFileSync(common.file, 'utf-8');
   const lernaConf = fs.existsSync(lerna.file) ? fs.readFileSync(lerna.file, 'utf-8') : '{}';
   const pnpmWorkspaceConf = fs.existsSync(pnpm.file) ? fs.readFileSync(pnpm.file, 'utf-8') : '{}';
@@ -29,3 +29,5 @@ export const getWorkspaces = () => {
 
   return pkgJSON[common.field] || lernaJSON[lerna.field] || pnpmWorkspaceJSON[pnpm.field];
 };
+
+export { CONFIGURATION, getWorkspaces };

@@ -1,19 +1,20 @@
-#!/usr/bin/env node
-
 import fs from 'fs';
 import path from 'path';
 import chalk from 'chalk';
 import prompts from 'prompts';
-import Commander, { Command } from 'commander';
+import { Command } from 'commander';
 
 import { getPackageManager, isValidPackageManager, validPackageManagers } from './lib/package';
-import { getWorkspaces } from './lib/workspace';
+import { getWorkspaces, CONFIGURATION } from './lib/workspace';
 import { getConfigurationInfo } from './lib/configuration';
 import { runScript } from './lib/script';
-import { hasPath, terminate, log } from './lib/common';
+import { hasPath, terminate, log, HEX_COLOR, customChalk } from './lib/common';
 import packageJson from '../package.json';
 
 import type { Configuration } from './types/configuration';
+
+const { green, blue } = customChalk;
+const { common, pnpm, lerna } = CONFIGURATION;
 
 /**
  * Notify if the current version is out of date.
@@ -47,14 +48,15 @@ const notifyUpdate = async () => {
  */
 export const init = async (_: unknown, command: Command) => {
   await notifyUpdate();
+  log(green('green'));
+  log(blue('blue'));
 
-  const styledCommand = chalk.hex('#0AC290')('mes init');
+  const styledCommand = green('mes init');
 
   // Check which package manager.
   const packageManager = getPackageManager();
   if (packageManager === 'deno') {
-    console.error(``);
-    process.exit(1);
+    terminate('Sorry, deno is not supported.');
   }
 
   const cwd = path.resolve(process.cwd());
@@ -77,6 +79,17 @@ export const init = async (_: unknown, command: Command) => {
   // Check if the monorepo workspace information exists
   const workspaces = getWorkspaces();
   if (!workspaces) {
+    log('Could not found workspaces information in current working directory.');
+    log('');
+    log(`If using ${green('yarn')} or ${green('npm')},`);
+    log(`include ${blue(common.field)} field in root ${blue(common.file)}`);
+    log('');
+    log(`Else if using ${green('pnpm')},`);
+    log(`include ${blue(pnpm.field)} field in root ${blue(pnpm.file)}`);
+    log('');
+    log(`Else if using ${green('lerna')} and want to use configuration file of lerna,`);
+    log(`include ${blue(lerna.field)} field in root ${blue(lerna.file)}`);
+
     terminate();
   }
 
