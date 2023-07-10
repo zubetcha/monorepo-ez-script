@@ -1,6 +1,6 @@
 {
   "include": ["src", "test"],
-  "exclude": ["test/deep", "test/doctor"],
+  "exclude": ["node_modules", "dist"],
   "compilerOptions": {
     "allowJs": true,
     "allowSyntheticDefaultImports": true,
@@ -14,10 +14,10 @@
     "noFallthroughCasesInSwitch": true,
     "noImplicitAny": true,
     "resolveJsonModule": true,
-    "outDir": "dist",
+    "outDir": "./dist",
     "skipLibCheck": true,
     "sourceMap": true,
     "strict": true,
-    "target": "es2019"
+    "target": "ES6"
   }
 }

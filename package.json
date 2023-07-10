@@ -1,25 +1,24 @@
 {
-  "name": "monorepo-ez-scripts",
+  "name": "monorepo-ez-script",
   "version": "0.0.1",
-  "description": "CLI for running scripts easily in monorepo",
+  "description": "CLI for running workspace script easily in monorepo",
   "main": "dist/src/index.js",
   "scripts": {
-    "build": "npm run build:ts && chmod -R 755 dist",
-    "build:ts": "rm -rf dist && tsc",
+    "build": "rm -rf dist && tsc --project tsconfig.compile.json",
     "lint": "eslint --ext .tsx --ext .ts src/",
     "format": "prettier --check ./src",
-    "prepare": "npm run build",
-    "local": "pnpm run prepare && npm link"
+    "prepare": "pnpm build",
+    "dev": "pnpm build && pnpm link --global"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/zubetcha/monorepo-ez-scripts.git"
   },
   "keywords": [
-    "monorepo",
-    "cli",
-    "scripts",
-    "task"
+    "Monorepo",
+    "CLI",
+    "Scripts",
+    "Task"
   ],
   "author": "zubetcha <zuhye5@gmail.com>",
   "license": "ISC",
@@ -37,14 +36,15 @@
   "dependencies": {
     "chalk": "^4.1.2",
     "commander": "^11.0.0",
-    "conf": "^11.0.1",
     "glob": "^10.3.1",
+    "progress": "^2.0.3",
     "prompts": "^2.4.2",
     "update-notifier": "^6.0.2",
     "yaml": "^2.3.1"
   },
   "devDependencies": {
     "@types/node": "^20.3.2",
+    "@types/progress": "^2.0.5",
     "@types/prompts": "^2.4.4",
     "@types/update-notifier": "^6.0.4",
     "@types/validate-npm-package-name": "^4.0.0",

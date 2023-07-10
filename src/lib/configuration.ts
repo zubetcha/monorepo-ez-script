@@ -1,5 +1,6 @@
 import { globSync } from 'glob';
 import fs from 'fs';
+import ProgressBar from 'progress';
 
 import type { PackageManager } from '../types/package';
 import type { Configuration } from '../types/configuration';
@@ -36,7 +37,16 @@ const getConfigurationInfo = (
     withFileTypes: true,
   });
 
+  const bar = new ProgressBar('[:bar] :current/:total :percent', {
+    total: packageJsonPaths.length,
+    width: 20,
+    complete: '=',
+    incomplete: ' ',
+  });
+
   packageJsonPaths.forEach(path => {
+    bar.tick();
+
     const packageJsonFile = fs.readFileSync(path.relative(), { encoding: 'utf-8' });
     const packageJson = JSON.parse(packageJsonFile);
     const packageName = packageManager === 'npm' ? path.parent?.name : packageJson.name;
@@ -54,8 +64,10 @@ const getConfigurationInfo = (
   };
 };
 
-const createConfiguration = (configurationInfo: Configuration) => {
-  fs.writeFileSync('.mesrc.json', JSON.stringify(configurationInfo));
+const createConfiguration = (configurationInfo: Configuration): Promise<void> => {
+  return new Promise(() => {
+    fs.writeFileSync('.mesrc.json', JSON.stringify(configurationInfo, null, 2));
+  });
 };
 
-export { getConfigurationInfo };
+export { getConfigurationInfo, createConfiguration };

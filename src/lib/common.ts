@@ -4,12 +4,15 @@ import chalk from 'chalk';
 
 const HEX_COLOR = {
   green: '#0AC290',
-  blue: '#2979FF',
+  blue: '#448AFF',
+  cyan: '#18FFFF',
 };
 
 const customChalk = {
   green: (text: string) => chalk.hex(HEX_COLOR.green)(text),
   blue: (text: string) => chalk.hex(HEX_COLOR.blue)(text),
+  cyan: (text: string) => chalk.hex(HEX_COLOR.cyan)(text),
+  yellow: (text: string) => chalk.yellow(text),
 };
 
 const hasPath = (cwd: string = '.', p: string) => {
@@ -22,10 +25,11 @@ const log = (message: string, type?: 'log' | 'error' | 'warn') => {
 
 const terminate = (message?: string) => {
   if (message) {
+    log('');
     log(message, 'error');
   }
 
   process.exit(1);
 };
 
-export { HEX_COLOR, hasPath, terminate, log, customChalk };
+export { hasPath, terminate, log, customChalk };

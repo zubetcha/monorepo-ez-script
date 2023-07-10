@@ -2,18 +2,17 @@ import fs from 'fs';
 import path from 'path';
 import chalk from 'chalk';
 import prompts from 'prompts';
-import { Command } from 'commander';
 
 import { getPackageManager, isValidPackageManager, validPackageManagers } from './lib/package';
 import { getWorkspaces, CONFIGURATION } from './lib/workspace';
-import { getConfigurationInfo } from './lib/configuration';
+import { getConfigurationInfo, createConfiguration } from './lib/configuration';
 import { runScript } from './lib/script';
-import { hasPath, terminate, log, HEX_COLOR, customChalk } from './lib/common';
+import { hasPath, terminate, log, customChalk } from './lib/common';
 import packageJson from '../package.json';
 
 import type { Configuration } from './types/configuration';
 
-const { green, blue } = customChalk;
+const { green, blue, cyan, yellow } = customChalk;
 const { common, pnpm, lerna } = CONFIGURATION;
 
 /**
@@ -46,39 +45,41 @@ const notifyUpdate = async () => {
 /**
  * Command action: init
  */
-export const init = async (_: unknown, command: Command) => {
+export const init = async () => {
   await notifyUpdate();
-  log(green('green'));
-  log(blue('blue'));
+
+  log('');
+  log(`> Creating configuration file...`);
 
   const styledCommand = green('mes init');
 
   // Check which package manager.
   const packageManager = getPackageManager();
   if (packageManager === 'deno') {
-    terminate('Sorry, deno is not supported.');
+    terminate(`${green('deno')} is not supported.`);
   }
 
   const cwd = path.resolve(process.cwd());
 
   // Check if CLI is running inside current working directory.
   if (!cwd.startsWith(process.cwd())) {
-    terminate(`Please run ${styledCommand} inside working directory.`);
+    terminate(`Run ${styledCommand} inside working directory.`);
   }
 
   // Check if the current working directory is the root directory.
   if (!hasPath(cwd, '.git')) {
-    terminate(`Please run ${styledCommand} in root directory.`);
+    terminate(`Run ${styledCommand} in root directory.`);
   }
 
   // Check if package.json exists in current working directory.
   if (!hasPath(cwd, 'package.json')) {
-    terminate(`Please make sure if package.json exists in root directory.`);
+    terminate(`Make sure that package.json exists in root directory.`);
   }
 
   // Check if the monorepo workspace information exists
   const workspaces = getWorkspaces();
   if (!workspaces) {
+    log('');
     log('Could not found workspaces information in current working directory.');
     log('');
     log(`If using ${green('yarn')} or ${green('npm')},`);
@@ -94,8 +95,14 @@ export const init = async (_: unknown, command: Command) => {
   }
 
   // Create configuration file in root directory.
+  log('');
+  log('> Collecting workspace information...');
+  log('');
+
   const configurationInfo = getConfigurationInfo(packageManager, workspaces);
-  fs.writeFileSync('.mesrc.json', JSON.stringify(configurationInfo));
+  await createConfiguration(configurationInfo);
+
+  log('done');
 };
 
 /**
@@ -106,55 +113,90 @@ export const run = async () => {
 
   // Check if configuration file exists in root directory
   if (!hasPath(cwd, '.mesrc.json')) {
-    console.error(`Please run ${chalk.green('mes init')} first to create configuration file.`);
-    process.exit(1);
+    log('');
+    log('Not found configuration file.');
+    log(`Run ${green('mes init')} first to create configuration file.`);
+    log('');
+
+    await init();
   }
 
-  // Get configuration file
-  const conf = fs.readFileSync('.mesrc.json', { encoding: 'utf-8' });
-  const confJSON: Configuration = JSON.parse(conf);
+  // Get configuration file from root
+  const configurationFile = fs.readFileSync('.mesrc.json', { encoding: 'utf-8' });
+  let { packageManager, workspaces, scripts }: Partial<Configuration> =
+    JSON.parse(configurationFile);
 
-  // 패키지 매니저 예외처리
-  // 패키지 매니저가 없으면 default npm, 유효한 이름이 아니면 예외처리
-  if (!confJSON.packageManager) {
-    confJSON.packageManager = 'npm';
-  } else if (
-    !isValidPackageManager(confJSON.packageManager) ||
-    confJSON.packageManager === 'deno'
-  ) {
-    console.error(``);
-    process.exit(1);
+  if (!packageManager) {
+    log('');
+    log(`Not found package manager.`);
+    log(`Apply ${cyan('npm')} by default.`);
+    log('');
+
+    packageManager = 'npm';
   }
 
-  //
-  if (!confJSON.workspaces.length) {
-    console.error(`At least`);
-    process.exit(1);
+  /**
+   * Check if configuration file has required information fully.
+   */
+  if (typeof packageManager !== 'string') {
+    return terminate(
+      `${cyan('packageManager')} should be one of ${yellow(validPackageManagers.join(', '))}`,
+    );
+  }
+
+  if (!isValidPackageManager(packageManager) || packageManager === 'deno') {
+    log('');
+    log(`${green(packageManager)} is not supported.`);
+    log(`Supported package managers are ${yellow(validPackageManagers.join(', '))}.`);
+    return terminate();
+  }
+
+  if (!workspaces) {
+    return terminate(`Make sure ${green('workspaces')} field exists in configuration file.`);
+  }
+
+  if (!(workspaces instanceof Array)) {
+    return terminate(`Type of ${green('workspace')} should be ${yellow('Array<string>')}`);
+  }
+
+  if (!workspaces.length) {
+    return terminate(`workspaces should have one workspace at least.`);
+  }
+
+  if (!scripts) {
+    return terminate(`Make sure ${green('scripts')} field exists in configuration file.`);
   }
 
   // Select workspace
-  const { workspace } = await prompts({
-    type: 'select',
-    name: 'workspace',
-    message: `Which workspace would you like to run script?`,
-    initial: 0,
-    choices: confJSON.workspaces.map(script => ({ title: script, value: script })),
-  });
+  const { workspace } = await prompts(
+    {
+      type: 'select',
+      name: 'workspace',
+      message: `Which ${cyan('workspace')} would you like to run script?`,
+      initial: 0,
+      choices: workspaces.map(script => ({ title: script, value: script })),
+    },
+    { onCancel: () => terminate('Exiting.') },
+  );
 
-  if (!confJSON.scripts[workspace] || !confJSON.scripts[workspace].length) {
-    console.error(``);
-    process.exit(1);
+  if (!scripts[workspace]) {
+    terminate(`${cyan(workspace)} doesn't exist in scripts as key.`);
+  } else if (!scripts[workspace].length) {
+    terminate(`Scripts of ${cyan(workspace)} don't have any script.`);
   }
 
   // Select workspace's script
-  const { script } = await prompts({
-    type: 'select',
-    name: 'script',
-    message: `Which script would you like to run?`,
-    initial: 0,
-    choices: confJSON.scripts[workspace].map(script => ({ title: script, value: script })),
-  });
+  const { script } = await prompts(
+    {
+      type: 'select',
+      name: 'script',
+      message: `Which ${cyan('script')} would you like to run?`,
+      initial: 0,
+      choices: scripts[workspace].map(script => ({ title: script, value: script })),
+    },
+    { onCancel: () => terminate('Exiting.') },
+  );
 
   // Run script
-  await runScript({ packageManager: confJSON.packageManager, workspace, script });
+  await runScript({ packageManager, workspace, script });
 };
