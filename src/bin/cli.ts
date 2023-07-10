@@ -8,7 +8,7 @@ import { init, run } from '../index';
 
 const program = new Command();
 
-program.name(packageJson.name).description(packageJson.description).version(packageJson.version);
+program.name('mes').description(packageJson.description).version(packageJson.version);
 
 program.command('init').description('Create configuration file in root directory').action(init);
 
