@@ -6,10 +6,11 @@ import chalk from 'chalk';
 import prompts from 'prompts';
 import Commander, { Command } from 'commander';
 
-import { getPackageManager, isValidPackageManager } from './lib/package';
+import { getPackageManager, isValidPackageManager, validPackageManagers } from './lib/package';
 import { getWorkspaces } from './lib/workspace';
-import { getConfiguration } from './lib/configuration';
-import { hasPath } from './lib/common';
+import { getConfigurationInfo } from './lib/configuration';
+import { runScript } from './lib/script';
+import { hasPath, terminate, log } from './lib/common';
 import packageJson from '../package.json';
 
 import type { Configuration } from './types/configuration';
@@ -45,9 +46,9 @@ const notifyUpdate = async () => {
  * Command action: init
  */
 export const init = async (_: unknown, command: Command) => {
-  console.log(`mes ${chalk.green(command.name())}`);
-
   await notifyUpdate();
+
+  const styledCommand = chalk.hex('#0AC290')('mes init');
 
   // Check which package manager.
   const packageManager = getPackageManager();
@@ -60,32 +61,28 @@ export const init = async (_: unknown, command: Command) => {
 
   // Check if CLI is running inside current working directory.
   if (!cwd.startsWith(process.cwd())) {
-    console.error(``);
-    process.exit(1);
+    terminate(`Please run ${styledCommand} inside working directory.`);
   }
 
   // Check if the current working directory is the root directory.
   if (!hasPath(cwd, '.git')) {
-    console.error(`Please run in root directory`);
-    process.exit(1);
+    terminate(`Please run ${styledCommand} in root directory.`);
   }
 
   // Check if package.json exists in current working directory.
   if (!hasPath(cwd, 'package.json')) {
-    console.error(`Please make sure that package.json exists in root directory`);
-    process.exit(1);
+    terminate(`Please make sure if package.json exists in root directory.`);
   }
 
   // Check if the monorepo workspace information exists
   const workspaces = getWorkspaces();
   if (!workspaces) {
-    console.error(`Please...`);
-    process.exit(1);
+    terminate();
   }
 
   // Create configuration file in root directory.
-  const configuration = getConfiguration(packageManager, workspaces);
-  fs.writeFileSync('.mesrc.json', JSON.stringify(configuration));
+  const configurationInfo = getConfigurationInfo(packageManager, workspaces);
+  fs.writeFileSync('.mesrc.json', JSON.stringify(configurationInfo));
 };
 
 /**
@@ -108,7 +105,10 @@ export const run = async () => {
   // 패키지 매니저가 없으면 default npm, 유효한 이름이 아니면 예외처리
   if (!confJSON.packageManager) {
     confJSON.packageManager = 'npm';
-  } else if (!isValidPackageManager(confJSON.packageManager)) {
+  } else if (
+    !isValidPackageManager(confJSON.packageManager) ||
+    confJSON.packageManager === 'deno'
+  ) {
     console.error(``);
     process.exit(1);
   }
@@ -142,8 +142,6 @@ export const run = async () => {
     choices: confJSON.scripts[workspace].map(script => ({ title: script, value: script })),
   });
 
-  console.log(workspace);
-  console.log(script);
-
   // Run script
+  await runScript({ packageManager: confJSON.packageManager, workspace, script });
 };

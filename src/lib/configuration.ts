@@ -11,7 +11,7 @@ import type { Configuration } from '../types/configuration';
  * @param workspaces
  * @returns
  */
-export const getConfiguration = (
+const getConfigurationInfo = (
   packageManager: PackageManager,
   workspaces: string[],
 ): Configuration => {
@@ -53,3 +53,9 @@ export const getConfiguration = (
     scripts,
   };
 };
+
+const createConfiguration = (configurationInfo: Configuration) => {
+  fs.writeFileSync('.mesrc.json', JSON.stringify(configurationInfo));
+};
+
+export { getConfigurationInfo };
