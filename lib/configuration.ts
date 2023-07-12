@@ -2,6 +2,7 @@ import { globSync } from 'glob';
 import fs from 'fs';
 import ProgressBar from 'progress';
 import { customChalk } from './common';
+import { log } from './common';
 
 import type { PackageManager } from '../types/package';
 import type { Configuration } from '../types/configuration';
@@ -53,6 +54,12 @@ const getConfigurationInfo = (
     const packageJsonFile = fs.readFileSync(path.relative(), { encoding: 'utf-8' });
     const packageJson = JSON.parse(packageJsonFile);
     const packageName = packageManager === 'npm' ? path.parent?.name : packageJson.name;
+
+    if (packageName && !packageJson.scripts) {
+      log('');
+      log(`Scripts are not found in package.json of ${cyan(packageName)}.`);
+      log('Skipping.');
+    }
 
     if (packageName && packageJson.scripts) {
       workpaceNames.add(packageName);
