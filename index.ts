@@ -8,7 +8,7 @@ import { getWorkspaces, CONFIGURATION } from './lib/workspace';
 import { getConfigurationInfo, createConfiguration } from './lib/configuration';
 import { runScript } from './lib/script';
 import { hasPath, terminate, log, customChalk } from './lib/common';
-import packageJson from '../package.json';
+import packageJson from './package.json';
 
 import type { Configuration } from './types/configuration';
 

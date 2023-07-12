@@ -3,7 +3,7 @@
 import { Command } from 'commander';
 import chalk from 'chalk';
 
-import packageJson from '../../package.json';
+import packageJson from '../package.json';
 import { init, run } from '../index';
 
 const program = new Command();

@@ -23,11 +23,15 @@ I know we can also add an abbreviated script to root package.json. But, it would
 
 <br/>
 
-## Installation and Setup
+## Install and Setup
+
+Install:
 
 ```bash
 npm install --save-dev monorepo-ez-script
 ```
+
+Create configuration file:
 
 ```bash
 mes init // generate configuration automatically

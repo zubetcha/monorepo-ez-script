@@ -2,11 +2,11 @@
   "name": "monorepo-ez-script",
   "version": "0.0.1",
   "description": "CLI for running workspace script easily in monorepo",
-  "main": "dist/src/index.js",
+  "main": "dist/index.js",
   "scripts": {
-    "build": "rm -rf dist && tsc --project tsconfig.compile.json && chmod 755 dist/src/bin/cli.js",
-    "lint": "eslint --ext .tsx --ext .ts src/",
-    "format": "prettier --check ./src",
+    "build": "rm -rf dist && tsc --project tsconfig.compile.json && chmod 755 dist/bin/cli.js",
+    "lint": "eslint --ext .tsx --ext .ts",
+    "format": "prettier --check",
     "prepare": "pnpm build",
     "dev": "pnpm build && npm link"
   },
@@ -27,7 +27,7 @@
   },
   "homepage": "https://github.com/zubetcha/monorepo-ez-scripts#readme",
   "bin": {
-    "mes": "dist/src/bin/cli.js"
+    "mes": "dist/bin/cli.js"
   },
   "files": [
     "dist",
