@@ -1,6 +1,6 @@
 {
   "name": "monorepo-ez-script",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "CLI for running workspace script easily in monorepo",
   "main": "dist/index.js",
   "scripts": {
@@ -62,5 +62,8 @@
     "lint-staged": "^13.2.2",
     "prettier": "^2.8.8",
     "typescript": "^5.1.5"
+  },
+  "engines": {
+    "node": ">=16"
   }
 }
