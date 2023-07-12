@@ -54,7 +54,7 @@ const getConfigurationInfo = (
     const packageJson = JSON.parse(packageJsonFile);
     const packageName = packageManager === 'npm' ? path.parent?.name : packageJson.name;
 
-    if (packageName) {
+    if (packageName && packageJson.scripts) {
       workpaceNames.add(packageName);
       scripts[packageName] = Object.keys(packageJson.scripts);
     }
