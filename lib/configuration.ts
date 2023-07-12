@@ -32,12 +32,13 @@ const getConfigurationInfo = (
   const ignores: string[] = workspaces
     .filter(workspace => workspace.startsWith('!'))
     .map(workspace => workspace.slice(1));
+  const dependenciesFolderPatterns = ['**/node_modules/**', '**/.yarn/**'];
 
   const workpaceNames: Set<string> = new Set();
   const scripts: Record<string, string[]> = {};
 
   const packageJsonPaths = globSync(workspacePatterns, {
-    ignore: ignores,
+    ignore: [...ignores, ...dependenciesFolderPatterns],
     withFileTypes: true,
   });
 
