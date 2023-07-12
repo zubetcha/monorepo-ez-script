@@ -156,3 +156,5 @@ yarn.lock
 # test files
 /test/temp_package*.json
 /test/.ncurc.json
+
+.pnpm-workspace-yaml

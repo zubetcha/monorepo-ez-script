@@ -1,9 +1,12 @@
 import { globSync } from 'glob';
 import fs from 'fs';
 import ProgressBar from 'progress';
+import { customChalk } from './common';
 
 import type { PackageManager } from '../types/package';
 import type { Configuration } from '../types/configuration';
+
+const { cyan } = customChalk;
 
 /**
  * Get Configuration Information like package manager, workspace name, scripts.
@@ -64,10 +67,8 @@ const getConfigurationInfo = (
   };
 };
 
-const createConfiguration = (configurationInfo: Configuration): Promise<void> => {
-  return new Promise(() => {
-    fs.writeFileSync('.mesrc.json', JSON.stringify(configurationInfo, null, 2));
-  });
+const createConfiguration = (configurationInfo: Configuration) => {
+  fs.writeFileSync('.mesrc.json', JSON.stringify(configurationInfo, null, 2));
 };
 
 export { getConfigurationInfo, createConfiguration };

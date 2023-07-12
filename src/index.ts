@@ -48,9 +48,6 @@ const notifyUpdate = async () => {
 export const init = async () => {
   await notifyUpdate();
 
-  log('');
-  log(`> Creating configuration file...`);
-
   const styledCommand = green('mes init');
 
   // Check which package manager.
@@ -96,13 +93,17 @@ export const init = async () => {
 
   // Create configuration file in root directory.
   log('');
-  log('> Collecting workspace information...');
-  log('');
+  log('> Collecting workspaces and scripts.');
 
   const configurationInfo = getConfigurationInfo(packageManager, workspaces);
-  await createConfiguration(configurationInfo);
 
-  log('done');
+  log('');
+  log(`> Creating configuration file.`);
+
+  createConfiguration(configurationInfo);
+
+  log('');
+  log(`Complete! Check ${yellow('.mesrc.json')}`);
 };
 
 /**

@@ -1,6 +1,6 @@
 # monorepo-ez-scripts
 
-CLI for running script of each workspace in monorepo directory more than easily.
+CLI for running script of each workspace in monorepo more easily.
 
 🙅🏻‍♀️ `deno` is not supported.
 
@@ -118,3 +118,18 @@ Currently, only `.mesrc.json` is supported.
   }
 }
 ```
+
+- packageManager:
+  - `npm | pnpm | yarn`
+  - `deno` is not supported.
+  - If there isn't packageManager, use `npm` by default.
+  - If packageManager is not one of `npm`, `pnpm`, `yarn`, quit command.
+- workspaces:
+  - `string[]`
+  - If there isn't workspaces, quit command.
+  - If there isn't any workspace in workspaces (empty array), quit command.
+- scripts:
+  - `Record<string, string[]>`
+  - Each key is workspace name and value is array including scripts key.
+  - It there isn't workspace name that selected as key, quit command.
+  - If workspace name that selected has empty array, quit command.

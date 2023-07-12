@@ -2,17 +2,18 @@ import path from 'path';
 import fs from 'fs';
 import chalk from 'chalk';
 
-const HEX_COLOR = {
+const HEX = {
   green: '#0AC290',
   blue: '#448AFF',
   cyan: '#18FFFF',
+  yellow: '#FFF48D',
 };
 
 const customChalk = {
-  green: (text: string) => chalk.hex(HEX_COLOR.green)(text),
-  blue: (text: string) => chalk.hex(HEX_COLOR.blue)(text),
-  cyan: (text: string) => chalk.hex(HEX_COLOR.cyan)(text),
-  yellow: (text: string) => chalk.yellow(text),
+  green: (text: string) => chalk.hex(HEX.green)(text),
+  blue: (text: string) => chalk.hex(HEX.blue)(text),
+  cyan: (text: string) => chalk.hex(HEX.cyan)(text),
+  yellow: (text: string) => chalk.hex(HEX.yellow)(text),
 };
 
 const hasPath = (cwd: string = '.', p: string) => {

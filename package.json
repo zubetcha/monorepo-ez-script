@@ -4,7 +4,7 @@
   "description": "CLI for running workspace script easily in monorepo",
   "main": "dist/src/index.js",
   "scripts": {
-    "build": "rm -rf dist && tsc --project tsconfig.compile.json",
+    "build": "rm -rf dist && tsc --project tsconfig.compile.json && chmod 755 dist/src/bin/cli.js",
     "lint": "eslint --ext .tsx --ext .ts src/",
     "format": "prettier --check ./src",
     "prepare": "pnpm build",
