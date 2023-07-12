@@ -157,4 +157,4 @@ yarn.lock
 /test/temp_package*.json
 /test/.ncurc.json
 
-.pnpm-workspace-yaml
+pnpm-workspace-yaml
