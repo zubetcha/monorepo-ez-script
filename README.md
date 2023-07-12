@@ -1,4 +1,4 @@
-# monorepo-ez-scripts
+# monorepo-ez-script
 
 CLI for running script of each workspace in monorepo more easily.
 
