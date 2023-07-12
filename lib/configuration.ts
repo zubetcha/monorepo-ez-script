@@ -49,22 +49,22 @@ const getConfigurationInfo = (
   });
 
   packageJsonPaths.forEach(path => {
-    bar.tick();
-
     const packageJsonFile = fs.readFileSync(path.relative(), { encoding: 'utf-8' });
     const packageJson = JSON.parse(packageJsonFile);
     const packageName = packageManager === 'npm' ? path.parent?.name : packageJson.name;
 
     if (packageName && !packageJson.scripts) {
       log('');
-      log(`Scripts are not found in package.json of ${cyan(packageName)}.`);
-      log('Skipping.');
+      log(`Scripts are not found in ${cyan(packageName)} package.json`);
+      log('Skipping');
     }
 
     if (packageName && packageJson.scripts) {
       workpaceNames.add(packageName);
       scripts[packageName] = Object.keys(packageJson.scripts);
     }
+
+    bar.tick();
   });
 
   return {
