@@ -17,7 +17,7 @@ const getPackageManager = (cwd: string = '.'): PackageManager => {
   } else if (isDeno) {
     return 'deno';
   } else if (isYarn) {
-    return 'deno';
+    return 'yarn';
   } else if (isNpm) {
     return 'npm';
   } else {
