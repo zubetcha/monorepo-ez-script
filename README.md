@@ -129,7 +129,12 @@ Currently, only `.mesrc.json` is supported.
   - If there isn't workspaces, quit command.
   - If there isn't any workspace in workspaces (empty array), quit command.
 - scripts:
+
   - `Record<string, string[]>`
   - Each key is workspace name and value is array including scripts key.
   - It there isn't workspace name that selected as key, quit command.
   - If workspace name that selected has empty array, quit command.
+
+  ## License
+
+  MIT
