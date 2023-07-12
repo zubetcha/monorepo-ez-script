@@ -1,6 +1,6 @@
 {
   "name": "monorepo-ez-script",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "CLI for running workspace script easily in monorepo",
   "main": "dist/index.js",
   "scripts": {
